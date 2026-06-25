@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TikTok OAuth Callback - Anime Automation</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: #f6f7fb;
+        color: #111827;
+      }
+
+      main {
+        width: min(760px, calc(100vw - 32px));
+        padding: 28px;
+        border-radius: 18px;
+        background: white;
+        box-shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
+      }
+
+      h1 {
+        margin: 0 0 10px;
+        font-size: 28px;
+      }
+
+      p {
+        color: #4b5563;
+        line-height: 1.6;
+      }
+
+      code,
+      textarea {
+        font-family:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", monospace;
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 112px;
+        box-sizing: border-box;
+        padding: 14px;
+        border: 1px solid #d1d5db;
+        border-radius: 12px;
+        font-size: 14px;
+        resize: vertical;
+      }
+
+      button {
+        margin-top: 12px;
+        border: 0;
+        border-radius: 999px;
+        padding: 12px 18px;
+        background: #111827;
+        color: white;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .meta {
+        margin-top: 14px;
+        color: #6b7280;
+        font-size: 13px;
+      }
+
+      .error {
+        padding: 12px 14px;
+        border-radius: 12px;
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        body {
+          background: #0b1020;
+          color: #f9fafb;
+        }
+
+        main {
+          background: #111827;
+        }
+
+        p,
+        .meta {
+          color: #d1d5db;
+        }
+
+        textarea {
+          background: #020617;
+          color: #f9fafb;
+          border-color: #374151;
+        }
+
+        button {
+          background: #f9fafb;
+          color: #111827;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>TikTok OAuth Callback</h1>
+      <p>
+        Copy the code below, then return to Anime Automation and run the
+        TikTok auth command.
+      </p>
+      <div id="error" class="error" hidden></div>
+      <label for="code"><strong>Authorization code</strong></label>
+      <textarea id="code" readonly></textarea>
+      <button id="copy" type="button">Copy code</button>
+      <p class="meta" id="state"></p>
+      <p class="meta">
+        Command:
+        <code>npm run tiktok:auth -- --code &lt;CODE&gt;</code>
+      </p>
+    </main>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get("code") || "";
+      const state = params.get("state") || "";
+      const error = params.get("error") || "";
+      const codeBox = document.querySelector("#code");
+      const copyButton = document.querySelector("#copy");
+      const stateBox = document.querySelector("#state");
+      const errorBox = document.querySelector("#error");
+
+      codeBox.value = code;
+      stateBox.textContent = state ? `State: ${state}` : "";
+
+      if (error) {
+        errorBox.hidden = false;
+        errorBox.textContent = `TikTok returned an error: ${error}`;
+      }
+
+      copyButton.addEventListener("click", async () => {
+        await navigator.clipboard.writeText(code);
+        copyButton.textContent = "Copied";
+        setTimeout(() => {
+          copyButton.textContent = "Copy code";
+        }, 1400);
+      });
+    </script>
+  </body>
+</html>
